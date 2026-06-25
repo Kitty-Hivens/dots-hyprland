@@ -1,13 +1,13 @@
 groups=(illogical-impulse)
 pkgname=illogical-impulse-audio
 pkgver=1.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Illogical Impulse Audio Dependencies'
 arch=(any)
 license=(None)
 depends=(
   cava
-  pavucontrol-qt
+  pavucontrol
   wireplumber
   pipewire-pulse
   libdbusmenu-gtk3
