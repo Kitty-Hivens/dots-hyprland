@@ -1,6 +1,9 @@
 -- put former exec-once commands inside the func and former exec commands outside
 hl.on("hyprland.start", function ()
 
+    -- uwsm: import env into systemd/dbus and activate graphical-session (run first)
+    hl.exec_cmd("uwsm finalize")
+
     -- Bar, wallpaper
     hl.exec_cmd("$HOME/.config/hypr/hyprland/scripts/start_geoclue_agent.sh")
     hl.exec_cmd("qs -c $qsConfig")
