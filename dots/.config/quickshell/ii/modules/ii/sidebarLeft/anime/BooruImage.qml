@@ -30,7 +30,8 @@ Button {
         id: imageDownloader
         running: root.manualDownload
         filePath: root.filePath
-        sourceUrl: root.imageData.preview_url ?? root.imageData.sample_url
+        // Prefer the medium-res sample over the ~150px preview so the grid isn't upscaled to mush.
+        sourceUrl: root.imageData.sample_url ?? root.imageData.preview_url
         onDone: (path, width, height) => {
             imageObject.source = ""
             imageObject.source = path
@@ -66,7 +67,8 @@ Button {
             width: root.rowHeight * modelData.aspect_ratio
             height: root.rowHeight
             fillMode: Image.PreserveAspectFit
-            source: modelData.preview_url
+            source: modelData.sample_url ?? modelData.preview_url
+            fallbacks: [modelData.preview_url]
 
             layer.enabled: true
             layer.effect: OpacityMask {
