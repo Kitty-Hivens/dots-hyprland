@@ -91,18 +91,6 @@ if [[ "$OS_DISTRO_ID" =~ ^(arch|endeavouros|cachyos)$ ]]; then
 elif [[ "$OS_DISTRO_ID_LIKE" == "arch" ]]; then
   OS_GROUP_ID="arch"
   print_os_group_id_functions=(print_os_group_id{,_alike})
-elif [[ "$OS_DISTRO_ID" == "gentoo" ]]; then
-  OS_GROUP_ID="gentoo"
-  print_os_group_id_functions=(print_os_group_id{,_unofficial})
-elif [[ "$OS_DISTRO_ID_LIKE" == "gentoo" ]]; then
-  OS_GROUP_ID="gentoo"
-  print_os_group_id_functions=(print_os_group_id{,_alike,_unofficial})
-elif [[ "$OS_DISTRO_ID" == "fedora" ]]; then
-  OS_GROUP_ID="fedora"
-  print_os_group_id_functions=(print_os_group_id{,_unofficial})
-elif [[ "$OS_DISTRO_ID_LIKE" == "fedora" ]]; then
-  OS_GROUP_ID="fedora"
-  print_os_group_id_functions=(print_os_group_id{,_alike,_unofficial})
 elif [[ "$OS_DISTRO_ID" =~ ^(opensuse-leap|opensuse-tumbleweed)$ ]] || [[ "$OS_DISTRO_ID_LIKE" =~ ^(opensuse|suse)(\ (opensuse|suse))?$ ]]; then
   OS_GROUP_ID="suse"
   INSTALL_VIA_NIX=true
