@@ -1,13 +1,13 @@
 <div align="center">
     <h1>【 end_4's Hyprland dotfiles 】</h1>
-    <h3></h3>
+    <h3>Personal fork — upstream: <a href="https://github.com/end-4/dots-hyprland">end-4/dots-hyprland</a></h3>
 </div>
 
 <div align="center"> 
 
-![](https://img.shields.io/github/last-commit/end-4/dots-hyprland?&style=for-the-badge&color=8ad7eb&logo=git&logoColor=D9E0EE&labelColor=1E202B)
-![](https://img.shields.io/github/stars/end-4/dots-hyprland?style=for-the-badge&logo=andela&color=86dbd7&logoColor=D9E0EE&labelColor=1E202B)
-![](https://img.shields.io/github/repo-size/end-4/dots-hyprland?color=86dbce&label=SIZE&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
+![](https://img.shields.io/github/last-commit/Kitty-Hivens/dots-hyprland?&style=for-the-badge&color=8ad7eb&logo=git&logoColor=D9E0EE&labelColor=1E202B)
+![](https://img.shields.io/github/stars/Kitty-Hivens/dots-hyprland?style=for-the-badge&logo=andela&color=86dbd7&logoColor=D9E0EE&labelColor=1E202B)
+![](https://img.shields.io/github/repo-size/Kitty-Hivens/dots-hyprland?color=86dbce&label=SIZE&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
 <a href="https://discord.gg/GtdRBXgMwq"> <img alt="Dynamic JSON Badge" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscordapp.com%2Fapi%2Finvites%2FGtdRBXgMwq%3Fwith_counts%3Dtrue&query=approximate_member_count&style=for-the-badge&logo=discord&logoColor=D9E0EE&label=discord&labelColor=%231E202B&color=86dbc0&link=https%3A%2F%2Fdiscord.gg%2FGtdRBXgMwq"> </a>
 
 </div>
@@ -44,9 +44,8 @@
   <summary>Installation</summary>
 
    - **IMPORTANT: Hyprland 0.55 Update**: If your distro has not shipped Hyprland 0.55 and/or you're not ready for it, you should switch to the Pre-Hyprland Luaification release. See [the wiki](https://ii.clsty.link/en/ii-qs/01setup/) for more info
-   - Just run `bash <(curl -s https://ii.clsty.link/get)`
-     - Or, clone this repo and run `./setup install`
-     - See [the wiki](https://ii.clsty.link/en/ii-qs/01setup/) for more details
+   - Clone this repo and run `./setup install`
+     - See the [upstream wiki](https://ii.clsty.link/en/ii-qs/01setup/) for general setup details
    - **Keybinds**: Should be somewhat familiar to Windows or GNOME users. Important ones:
      - `Super`+`/` = keybind list
      - `Super`+`Enter` = terminal
@@ -61,7 +60,7 @@
   | ------------- | ------------- |
   | [Hyprland](https://github.com/hyprwm/hyprland) | The compositor (manages and renders windows) |
   | [Quickshell](https://quickshell.outfoxxed.me/) | A QtQuick-based widget system, used for the status bar, sidebars, etc. |
-  | Others | See [deps-info.md](https://github.com/end-4/dots-hyprland/blob/main/sdata/deps-info.md) |
+  | Others | See [deps-info.md](https://github.com/Kitty-Hivens/dots-hyprland/blob/main/sdata/deps-info.md) |
 
 </details>
 
@@ -95,6 +94,7 @@ Widget system: Quickshell | Support: Yes
     <h3></h3>
 </div>
 
+ - [@end-4](https://github.com/end-4) for the original dotfiles this is forked from
  - [@clsty](https://github.com/clsty) for making the dotfiles accessible by taking care of the install script and many other things
  - [@midn8hustlr](https://github.com/midn8hustlr) for greatly improving the color generation system
  - [@outfoxxed](https://github.com/outfoxxed/) for being extremely supportive in my Quickshell journey
@@ -103,76 +103,9 @@ Widget system: Quickshell | Support: Yes
  - EWW: [fufexan](https://github.com/fufexan/dotfiles)
 
 <div align="center">
-    <h2>• stonks •</h2>
-    <h3></h3>
-</div>
-
-- I promise not to attempt an +ULTRARICOSHOT irl... Coins can go here: https://github.com/sponsors/end-4
-- Tentacle cat hub twinkle internet points
-
-[![Stargazers over time](https://starchart.cc/end-4/dots-hyprland.svg?variant=adaptive)](https://starchart.cc/end-4/dots-hyprland)
-
-
----
-
-<div align="center">
-    <h2>• previous styles •</h2>
-    <h3></h3>
-</div>
-
-- **Unsupported!**
-- **Source**: illogical-impulse AGS in `ii-ags` branch, others in `archive` branch.
-- List is in reverse chronological order
-
-### illogical-impulse (AGS)
-
-Widget system: AGS | Support: No
-
-| AI | Common widgets |
-|:---|:---------------|
-| ![image](https://github.com/user-attachments/assets/9d7af13f-89ef-470d-ba78-d2288b79cf60) | ![image](https://github.com/end-4/dots-hyprland/assets/97237370/406b72b6-fa38-4f0d-a6c4-4d7d5d5ddcb7) |
-| Window management | Weeb power |
-| ![image](https://github.com/user-attachments/assets/02983b9b-79ba-4c25-8717-90bef2357ae5) | ![image](https://github.com/user-attachments/assets/bbb332ec-962a-4e88-a95b-486d0bd8ce76) |
-
-#### m3ww
-
-Widget system: EWW | Support: No
-
-<a href="https://streamable.com/85ch8x">
-<img src="https://github.com/end-4/dots-hyprland/assets/97237370/09533e64-b6d7-47eb-a840-ee90c6776adf" alt="Material Eww!">
-</a>
-
-#### NovelKnock
-
-Widget system: EWW | Support: No
-
-<a href="https://streamable.com/7vo61k">
-<img src="https://github.com/end-4/dots-hyprland/assets/97237370/42903d03-bf6f-49d4-be7f-dd77e6cb389d" alt="Desktop Preview">
-</a>
-
-#### Hybrid
-
-Widget system: EWW | Support: No
-
-<a href="https://streamable.com/4oogot">
-<img src="https://github.com/end-4/dots-hyprland/assets/97237370/190deb1e-f6f5-46ce-8cf0-9b39944c079d" alt="click the circles!">
-</a>
-
-#### Windoes
-
-Widget system: EWW | Support: No
-
-<a href="https://streamable.com/5qx614">
-<img src="https://github.com/end-4/dots-hyprland/assets/97237370/b15317b1-f295-49f5-b90c-fb6328b8d886" alt="Desktop Preview">
-</a>
-
-
-
-<div align="center">
     <h2>• inspirations/copying •</h2>
     <h3></h3>
 </div>
 
  - Inspiration: osu!lazer (Hybrid), Windows 11 (Windoes), AvdanOS (NovelKnock), Material Design 3 (m3ww & later)
  - Copying: Absolutely, feel free. Just follow the license and it's all good
- 
