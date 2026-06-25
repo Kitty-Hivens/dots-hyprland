@@ -2,6 +2,7 @@ import qs.modules.common
 import qs.modules.common.models
 import qs.modules.common.functions
 import QtQuick
+import QtQuick.Dialogs
 import Qt.labs.folderlistmodel
 import Quickshell
 import Quickshell.Io
@@ -36,8 +37,22 @@ Singleton {
 
     function load () {} // For forcing initialization
     
+    property bool fallbackPickerDarkMode: false
+
+    FileDialog {
+        id: fallbackPicker
+        title: Translation.tr("Choose wallpaper")
+        currentFolder: root.directory
+        nameFilters: [
+            `${Translation.tr("Wallpapers")} (${root.extensions.map(e => "*." + e).join(" ")})`,
+            `${Translation.tr("All files")} (*)`
+        ]
+        onAccepted: root.apply(FileUtils.trimFileProtocol(fallbackPicker.selectedFile.toString()), root.fallbackPickerDarkMode)
+    }
+
     function openFallbackPicker(darkMode = Appearance.m3colors.darkmode) {
-        Quickshell.execDetached([Directories.wallpaperSwitchScriptPath, "--mode", darkMode ? "dark" : "light"]);
+        root.fallbackPickerDarkMode = darkMode;
+        fallbackPicker.open();
     }
 
     function apply(path, darkMode = Appearance.m3colors.darkmode) {
