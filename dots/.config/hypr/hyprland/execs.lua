@@ -6,7 +6,9 @@ hl.on("hyprland.start", function ()
 
     -- Bar, wallpaper
     hl.exec_cmd("$HOME/.config/hypr/hyprland/scripts/start_geoclue_agent.sh")
-    hl.exec_cmd("qs -c $qsConfig")
+    -- uwsm app: run qs as its own tracked unit so it lands in user@.service (not 0::/),
+    -- restoring logind/polkit session tracking for its PolkitAgent
+    hl.exec_cmd("uwsm app -- qs -c $qsConfig")
     hl.exec_cmd("$HOME/.config/hypr/custom/scripts/__restore_video_wallpaper.sh")
 
     -- Core components (authentication, lock screen, notification daemon)
