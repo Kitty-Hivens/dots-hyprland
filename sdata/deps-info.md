@@ -12,7 +12,7 @@ Tips:
 ## illogical-impulse-audio
 - `cava`
   - Used in Quickshell config.
-- `pavucontrol-qt`
+- `pavucontrol`
   - Used in Hyprland and Quickshell config.
 - `wireplumber`
   - Not explicitly used.
@@ -60,12 +60,12 @@ Tips:
   - [source](https://github.com/lassekongo83/adw-gtk3)
   - Used in Quickshell config.
 - `breeze`
-  - Used in kdeglobals config.
+  - Breeze base for Qt; referenced by kdeglobals.
 - `breeze-plus`
   - [source](https://github.com/mjkim0727/breeze-plus)
-  - Used in kde-material-you-colors config.
+  - Qt/tray icon theme (`kdeglobals` `Theme=breeze-plus-dark`), resolved by the KDE icon-engine.
 - `darkly-bin`
-  - `darkly` is supposed to be set as the theme for Qt apps, just have not figured out how to properly set it yet.
+  - Qt widget style (`kdeglobals` `widgetStyle=Darkly`).
 - `eza`
   - Used in Fish config: `alias ls 'eza --icons'`
 - `fish`
@@ -129,8 +129,6 @@ Tips:
 
 ## illogical-impulse-portal
 - `xdg-desktop-portal`
-  - Basic component.
-- `xdg-desktop-portal-kde`
   - Basic component.
 - `xdg-desktop-portal-gtk`
   - Basic component.
