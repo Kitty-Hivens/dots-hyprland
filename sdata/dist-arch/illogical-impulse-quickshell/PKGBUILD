@@ -1,9 +1,8 @@
-# Now uses the official repo `quickshell` instead of building a pinned git commit.
-# Kept the package name to avoid touching install-deps routing; it is a meta
-# package now (no build), pulling repo quickshell + the extra Qt deps ii needs.
+# Meta package: pulls the official repo `quickshell` plus the extra Qt deps the ii
+# config needs (no build -- replaces the old pinned-git-commit build).
 
 groups=(illogical-impulse)
-pkgname=illogical-impulse-quickshell-git
+pkgname=illogical-impulse-quickshell
 pkgver=1.0
 pkgrel=1
 pkgdesc='Official Quickshell + extra Qt deps for illogical-impulse'

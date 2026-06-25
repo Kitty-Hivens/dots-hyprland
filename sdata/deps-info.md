@@ -201,13 +201,11 @@ Tips:
 
 
 # Actual packages
-## illogical-impulse-quickshell-git
-- Pinned commit.
-- Also with extra dependencies (mainly Qt things) needed by the illogical-impulse Quickshell config.
+## illogical-impulse-quickshell
+- Meta package depending on the official repo `quickshell` (no build).
+- Also pulls extra dependencies (mainly Qt things) needed by the illogical-impulse Quickshell config. The repo `quickshell` brings its own core deps (qt6-base, qt6-declarative, mesa, libdrm, etc).
 
 Extra dependencies.
-- `qt6-base`
-- `qt6-declarative`
 - `qt6-5compat`
 - `qt6-avif-image-plugin`
 - `qt6-imageformats`
@@ -223,11 +221,6 @@ Extra dependencies.
 - `kirigami`
 - `kdialog`
 - `syntax-highlighting`
-- `vulkan-headers`
-- `libdrm`
-- `cpptrace`
-- `jemalloc`
-- `mesa`
 
 ## illogical-impulse-bibata-modern-classic-bin
 - [source](https://github.com/ful1e5/Bibata_Cursor)
