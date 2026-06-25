@@ -12,37 +12,17 @@ SHELL_CONFIG_FILE="$XDG_CONFIG_HOME/illogical-impulse/config.json"
 MATUGEN_DIR="$XDG_CONFIG_HOME/matugen"
 terminalscheme="$SCRIPT_DIR/terminal/scheme-base.json"
 
-handle_kde_material_you_colors() {
-    # Check if Qt app theming is enabled in config
-    if [ -f "$SHELL_CONFIG_FILE" ]; then
-        enable_qt_apps=$(jq -r '.appearance.wallpaperTheming.enableQtApps' "$SHELL_CONFIG_FILE")
-        if [ "$enable_qt_apps" == "false" ]; then
-            return
-        fi
-    fi
-
-    # Map $type_flag to allowed scheme variants for kde-material-you-colors-wrapper.sh
-    local kde_scheme_variant=""
-    case "$type_flag" in
-        scheme-content|scheme-expressive|scheme-fidelity|scheme-fruit-salad|scheme-monochrome|scheme-neutral|scheme-rainbow|scheme-tonal-spot)
-            kde_scheme_variant="$type_flag"
-            ;;
-        *)
-            kde_scheme_variant="scheme-tonal-spot" # default
-            ;;
-    esac
-    "$XDG_CONFIG_HOME"/matugen/templates/kde/kde-material-you-colors-wrapper.sh --scheme-variant "$kde_scheme_variant"
-}
-
 pre_process() {
     local mode_flag="$1"
-    # Set GNOME color-scheme if mode_flag is dark or light
+    # Set GNOME color-scheme, GTK theme and icon theme by mode
     if [[ "$mode_flag" == "dark" ]]; then
         gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
         gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
+        gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
     elif [[ "$mode_flag" == "light" ]]; then
         gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
         gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3'
+        gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Light'
     fi
 
     if [ ! -d "$CACHE_DIR"/user/generated ]; then
@@ -55,7 +35,6 @@ post_process() {
     local screen_height="$2"
     local wallpaper_path="$3"
 
-    handle_kde_material_you_colors &
     "$SCRIPT_DIR/code/material-code-set-color.sh" &
 }
 
@@ -409,12 +388,6 @@ main() {
     if [[ $valid_type -eq 0 ]]; then
         echo "[switchwall.sh] Warning: Invalid type '$type_flag', defaulting to 'auto'" >&2
         type_flag="auto"
-    fi
-
-    # Only prompt for wallpaper if not using --color and not using --noswitch and no imgpath set
-    if [[ -z "$imgpath" && -z "$color_flag" && -z "$noswitch_flag" ]]; then
-        cd "$(xdg-user-dir PICTURES)/Wallpapers/showcase" 2>/dev/null || cd "$(xdg-user-dir PICTURES)/Wallpapers" 2>/dev/null || cd "$(xdg-user-dir PICTURES)" || return 1
-        imgpath="$(kdialog --getopenfilename . --title 'Choose wallpaper')"
     fi
 
     if [[ -n "$imgpath" && -z "$noswitch_flag" ]]; then

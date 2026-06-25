@@ -89,5 +89,3 @@ else
   echo "Config file not found at $CONFIG_FILE. Applying terminal theming by default."
   apply_term &
 fi
-
-# apply_qt & # Qt theming is already handled by kde-material-colors
