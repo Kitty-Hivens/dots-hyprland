@@ -19,17 +19,6 @@ ContentPage {
             }
         }
         ConfigSwitch {
-            buttonIcon: "tv_options_input_settings"
-            text: Translation.tr("Qt apps")
-            checked: Config.options.appearance.wallpaperTheming.enableQtApps
-            onCheckedChanged: {
-                Config.options.appearance.wallpaperTheming.enableQtApps = checked;
-            }
-            StyledToolTip {
-                text: Translation.tr("Shell & utilities theming must also be enabled")
-            }
-        }
-        ConfigSwitch {
             buttonIcon: "terminal"
             text: Translation.tr("Terminal")
             checked: Config.options.appearance.wallpaperTheming.enableTerminal
