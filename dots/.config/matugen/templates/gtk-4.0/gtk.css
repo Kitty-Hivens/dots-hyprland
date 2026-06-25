@@ -259,7 +259,7 @@ headerbar >windowhandle box stack > box:nth-child(2) {
 }
 
 .navigation-sidebar row {
-  border-radius: 999px;
+  border-radius: 18px;
   padding: 2px;
 }
 
