@@ -371,6 +371,14 @@ Singleton {
                 }
             }
 
+            property JsonObject gameMode: JsonObject {
+                property bool active: false
+                property bool autoOnFullscreen: false
+                property bool visual: true
+                property bool system: true
+                property bool wallpaper: true
+            }
+
             property JsonObject lock: JsonObject {
                 property bool useHyprlock: false
                 property bool launchOnStartup: false

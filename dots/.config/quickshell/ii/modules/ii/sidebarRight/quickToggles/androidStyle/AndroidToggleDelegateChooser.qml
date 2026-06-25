@@ -19,6 +19,7 @@ DelegateChooser {
     signal openBluetoothDialog()
     signal openNightLightDialog()
     signal openWifiDialog()
+    signal openGameModeDialog()
 
     role: "type"
 
@@ -133,6 +134,9 @@ DelegateChooser {
         baseCellHeight: root.baseCellHeight
         cellSpacing: root.spacing
         cellSize: modelData.size
+        onOpenMenu: {
+            root.openGameModeDialog()
+        }
     } }
 
     DelegateChoice { roleValue: "idleInhibitor"; AndroidIdleInhibitorToggle {

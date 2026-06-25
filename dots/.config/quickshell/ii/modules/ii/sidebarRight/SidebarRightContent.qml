@@ -13,6 +13,7 @@ import qs.modules.ii.sidebarRight.quickToggles
 import qs.modules.ii.sidebarRight.quickToggles.classicStyle
 
 import qs.modules.ii.sidebarRight.bluetoothDevices
+import qs.modules.ii.sidebarRight.gameMode
 import qs.modules.ii.sidebarRight.nightLight
 import qs.modules.ii.sidebarRight.volumeMixer
 import qs.modules.ii.sidebarRight.wifiNetworks
@@ -26,6 +27,7 @@ Item {
     property bool showAudioInputDialog: false
     property bool showBluetoothDialog: false
     property bool showNightLightDialog: false
+    property bool showGameModeDialog: false
     property bool showWifiDialog: false
     property bool editMode: false
 
@@ -144,6 +146,11 @@ Item {
     }
 
     ToggleDialog {
+        shownPropertyString: "showGameModeDialog"
+        dialog: GameModeDialog {}
+    }
+
+    ToggleDialog {
         shownPropertyString: "showWifiDialog"
         dialog: WifiDialog {}
         onShownChanged: {
@@ -200,6 +207,9 @@ Item {
             }
             function onOpenNightLightDialog() {
                 root.showNightLightDialog = true;
+            }
+            function onOpenGameModeDialog() {
+                root.showGameModeDialog = true;
             }
             function onOpenWifiDialog() {
                 root.showWifiDialog = true;
