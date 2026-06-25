@@ -112,21 +112,19 @@ Tips:
 - `ffmpegthumbnailer`
   - Generates video thumbnails in the wallpaper selector via the GNOME thumbnail factory.
 
-## illogical-impulse-kde
-- `bluedevil`
-  - Provide command `kcmshell6 kcm_bluetooth` used by Quickshell bluetooth functionality.
+## illogical-impulse-gtk
 - `gnome-keyring`
   - Provide executable `gnome-keyring-daemon`, used in Hyprland and Quickshell config.
 - `networkmanager`
-  - Basic component.
-- `plasma-nm`
-  - Provide command `kcmshell6 kcm_networkmanagement` used by Quickshell network functionality.
-- `polkit-kde-agent`
-  - Basic component.
-- `dolphin`
-  - Used in Hyprland and Quickshell config.
-- `systemsettings`
-  - Used in Hyprland `keybinds.conf`.
+  - Network backend; `nmtui` is the configured `apps.network`.
+- `overskride-bin`
+  - GTK/Adwaita Bluetooth manager (`apps.bluetooth`); replaces bluedevil.
+- `nautilus`
+  - File manager; replaces dolphin.
+- `resources`
+  - Adwaita system monitor (`apps.taskManager`); replaces plasma-systemmonitor.
+- `hyprpolkitagent`
+  - Polkit authentication agent for Hyprland; replaces polkit-kde-agent.
 
 
 ## illogical-impulse-portal

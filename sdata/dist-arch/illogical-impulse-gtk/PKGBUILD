@@ -1,0 +1,15 @@
+groups=(illogical-impulse)
+pkgname=illogical-impulse-gtk
+pkgver=1.0
+pkgrel=1
+pkgdesc='Illogical Impulse GTK/portal desktop integration (replaces the KDE set)'
+arch=(any)
+license=(None)
+depends=(
+  gnome-keyring
+  networkmanager
+  overskride-bin
+  nautilus
+  resources
+  hyprpolkitagent
+)
