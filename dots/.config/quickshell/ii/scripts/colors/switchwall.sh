@@ -226,8 +226,11 @@ switch() {
             # Set wallpaper path
             set_wallpaper_path "$imgpath"
 
-            # Set video wallpaper
-            local video_path="$imgpath"
+            # Set video wallpaper. Route through the downscale cache so mpvpaper never
+            # decodes more than the largest panel can show (custom/, survives ii updates).
+            local video_path
+            video_path="$("$CUSTOM_DIR/scripts/wallpaper-downscale.sh" "$imgpath")"
+            [ -n "$video_path" ] || video_path="$imgpath"
             monitors=$(hyprctl monitors -j | jq -r '.[] | .name')
             for monitor in $monitors; do
                 mpvpaper -o "$VIDEO_OPTS" "$monitor" "$video_path" &

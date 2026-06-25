@@ -31,29 +31,35 @@ logger.add(sys.stdout, level="INFO")
 logger.add("/tmp/thumbgen.log", level="DEBUG", rotation="100 MB")
 
 def make_thumbnail(fpath: str) -> bool:
-    mtime = os.path.getmtime(fpath)
-    # Use Gio to determine the URI and mime type
-    f = Gio.file_new_for_path(str(fpath))
-    uri = f.get_uri()
-    info = f.query_info("standard::content-type", Gio.FileQueryInfoFlags.NONE, None)
-    mime_type = info.get_content_type()
+    # A failing thumbnailer must not abort the whole batch -- otherwise one bad file
+    # (or a format whose thumbnailer crashes) blanks every preview in the folder.
+    try:
+        mtime = os.path.getmtime(fpath)
+        # Use Gio to determine the URI and mime type
+        f = Gio.file_new_for_path(str(fpath))
+        uri = f.get_uri()
+        info = f.query_info("standard::content-type", Gio.FileQueryInfoFlags.NONE, None)
+        mime_type = info.get_content_type()
 
-    if factory.lookup(uri, mtime) is not None:
-        logger.debug("FRESH       {}".format(uri))
+        if factory.lookup(uri, mtime) is not None:
+            logger.debug("FRESH       {}".format(uri))
+            return False
+
+        if not factory.can_thumbnail(uri, mime_type, mtime):
+            logger.debug("UNSUPPORTED {}".format(uri))
+            return False
+
+        thumbnail = factory.generate_thumbnail(uri, mime_type)
+        if thumbnail is None:
+            logger.debug("ERROR       {}".format(uri))
+            return False
+
+        logger.debug("OK          {}".format(uri))
+        factory.save_thumbnail(thumbnail, uri, mtime)
+        return True
+    except Exception as e:
+        logger.debug("FAILED      {} ({})".format(fpath, e))
         return False
-
-    if not factory.can_thumbnail(uri, mime_type, mtime):
-        logger.debug("UNSUPPORTED {}".format(uri))
-        return False
-
-    thumbnail = factory.generate_thumbnail(uri, mime_type)
-    if thumbnail is None:
-        logger.debug("ERROR       {}".format(uri))
-        return False
-
-    logger.debug("OK          {}".format(uri))
-    factory.save_thumbnail(thumbnail, uri, mtime)
-    return True
 
 
 @logger.catch()

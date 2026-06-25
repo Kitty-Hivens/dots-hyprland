@@ -35,6 +35,7 @@ StyledImage {
 
     onSourceSizeChanged: {
         if (!root.generateThumbnail) return;
+        if (Images.isValidVideoByName(root.sourcePath)) return; // never feed a video to magick -- it decodes every frame into RAM
         thumbnailGeneration.running = false;
         thumbnailGeneration.running = true;
     }

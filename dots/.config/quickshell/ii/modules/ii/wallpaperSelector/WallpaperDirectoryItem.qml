@@ -10,7 +10,7 @@ MouseArea {
     id: root
     required property var fileModelData
     property bool isDirectory: fileModelData.fileIsDir
-    property bool useThumbnail: Images.isValidImageByName(fileModelData.fileName)
+    property bool useThumbnail: Images.isThumbnailableByName(fileModelData.fileName)
 
     property alias colBackground: background.color
     property alias colText: wallpaperItemName.color
@@ -62,6 +62,10 @@ MouseArea {
                         id: thumbnailImage
                         generateThumbnail: false
                         sourcePath: fileModelData.filePath
+                        // Read the same cache size the batch generates for this cell, instead
+                        // of ThumbnailImage's sourceSize-based default (which lands on "normal"
+                        // and shows a blurry 128px crop -- or nothing for a freshly added file).
+                        thumbnailSizeName: Images.thumbnailSizeNameForDimensions(root.width - (root.margins + root.padding) * 2, root.height - (root.margins + root.padding) * 2)
 
                         cache: false
                         fillMode: Image.PreserveAspectCrop
@@ -100,6 +104,24 @@ MouseArea {
                     anchors.fill: parent
                     sourceComponent: DirectoryIcon {
                         fileModelData: root.fileModelData
+                    }
+                }
+
+                Loader {
+                    active: Images.isValidVideoByName(root.fileModelData.fileName)
+                    anchors.centerIn: parent
+                    sourceComponent: Rectangle {
+                        implicitWidth: 44
+                        implicitHeight: 44
+                        radius: width / 2
+                        color: Qt.rgba(0, 0, 0, 0.45)
+                        MaterialSymbol {
+                            anchors.centerIn: parent
+                            text: "play_arrow"
+                            iconSize: 28
+                            fill: 1
+                            color: "white"
+                        }
                     }
                 }
             }
