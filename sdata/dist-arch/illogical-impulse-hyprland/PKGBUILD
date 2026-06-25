@@ -12,4 +12,5 @@ depends=(
   gamemode
   mpvpaper
   ffmpeg
+  ffmpegthumbnailer
 )

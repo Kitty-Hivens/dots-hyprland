@@ -109,6 +109,8 @@ Tips:
   - Plays video wallpapers, set in `quickshell/ii/scripts/colors/switchwall.sh`.
 - `ffmpeg`
   - Extracts a single video frame for AI wallpaper categorisation (`scripts/ai/gemini-categorize-wallpaper.sh`).
+- `ffmpegthumbnailer`
+  - Generates video thumbnails in the wallpaper selector via the GNOME thumbnail factory.
 
 ## illogical-impulse-kde
 - `bluedevil`
