@@ -9,4 +9,7 @@ depends=(
   hyprland
   hyprsunset
   wl-clipboard
+  gamemode
+  mpvpaper
+  ffmpeg
 )

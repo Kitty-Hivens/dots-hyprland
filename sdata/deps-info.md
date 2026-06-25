@@ -103,6 +103,12 @@ Tips:
   - Used in Quickshell config.
 - `wl-clipboard`
   - Surely needed.
+- `gamemode`
+  - Provides `gamemoderun`, held by the Quickshell game mode "System GameMode" option (Feral CPU governor).
+- `mpvpaper`
+  - Plays video wallpapers, set in `quickshell/ii/scripts/colors/switchwall.sh`.
+- `ffmpeg`
+  - Extracts a single video frame for AI wallpaper categorisation (`scripts/ai/gemini-categorize-wallpaper.sh`).
 
 ## illogical-impulse-kde
 - `bluedevil`
