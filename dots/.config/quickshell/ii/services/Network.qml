@@ -158,6 +158,22 @@ Singleton {
         wifiStatusProcess.running = true
         updateNetworkName.running = true;
         updateNetworkStrength.running = true;
+        getNetworks.running = true;
+    }
+
+    // Re-scan on every transition out of "connected": refreshes the AP list
+    // and triggers a NetworkManager autoconnect re-evaluation.
+    onWifiStatusChanged: if (wifiStatus !== "connected") rescanWifi();
+
+    // Background scan keeps the list current and autoconnect re-evaluated even
+    // with no monitor events; tighter cadence while disconnected.
+    Timer {
+        id: autoRescanTimer
+        running: root.wifiEnabled
+        repeat: true
+        triggeredOnStart: true
+        interval: (root.wifiStatus === "connected") ? 30000 : 7000
+        onTriggered: root.rescanWifi()
     }
 
     Process {
