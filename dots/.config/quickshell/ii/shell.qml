@@ -31,6 +31,7 @@ ShellRoot {
         Wallpapers.load()
         Updates.load()
         GameMode.load()
+        Idle.load()
     }
 
 
