@@ -83,6 +83,10 @@ Singleton {
                 property bool inhibit: false
             }
 
+            property JsonObject lock: JsonObject {
+                property bool locked: false
+            }
+
             property JsonObject overlay: JsonObject {
                 property list<string> open: ["crosshair", "recorder", "volumeMixer", "resources"]
                 property JsonObject crosshair: JsonObject {

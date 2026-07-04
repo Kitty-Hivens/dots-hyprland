@@ -138,6 +138,9 @@ Scope {
             KeyringStorage.fetchKeyringData();
         }
     }
+    // Both singletons may already be ready here, so onReadyChanged may never fire.
+    Component.onCompleted: root.initIfReady()
+
     Connections {
         target: Config
         function onReadyChanged() {
