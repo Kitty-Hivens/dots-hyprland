@@ -14,6 +14,10 @@ TabButton {
     property string buttonText
     property bool expanded: false
     property bool showToggledHighlight: true
+    // Guards the expand/collapse anchor transitions so they don't play on the
+    // initial `expanded` false->true settle (which showed a torn collapsed frame).
+    property bool completed: false
+    Component.onCompleted: completed = true
     readonly property real visualWidth: root.expanded ? root.baseSize + 20 + itemText.implicitWidth : root.baseSize
 
     property real baseSize: 56
@@ -71,6 +75,7 @@ TabButton {
                 }
             }
             transitions: Transition {
+                enabled: root.completed
                 AnchorAnimation {
                     duration: Appearance.animation.elementMoveFast.duration
                     easing.type: Appearance.animation.elementMoveFast.type
@@ -135,6 +140,7 @@ TabButton {
                 }
             }
             transitions: Transition {
+                enabled: root.completed
                 AnchorAnimation {
                     duration: Appearance.animation.elementMoveFast.duration
                     easing.type: Appearance.animation.elementMoveFast.type
