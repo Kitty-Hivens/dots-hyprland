@@ -95,7 +95,7 @@ ContentPage {
                 Layout.alignment: Qt.AlignVCenter
                 // spacing: 10
                 StyledText {
-                    text: Translation.tr("illogical-impulse")
+                    text: Translation.tr("YukiUI (based on Illogical Impulse)")
                     font.pixelSize: Appearance.font.pixelSize.title
                 }
                 StyledText {
