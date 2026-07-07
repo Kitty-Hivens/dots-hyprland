@@ -26,6 +26,11 @@ hl.window_rule({match = {title = "^(.*)(wants to save)$" },                  cen
 hl.window_rule({match = {title = "^(.*)(wants to save)$" },                  float = true})
 hl.window_rule({match = {title = "^(.*)(wants to open)$" },                  center = true})
 hl.window_rule({match = {title = "^(.*)(wants to open)$" },                  float = true})
+-- Portal file chooser (GTK backend). Matched by class so it works regardless of locale,
+-- unlike the title rules above. Replaces the dropped KDE portal rule.
+hl.window_rule({match = {class = "^(xdg-desktop-portal-gtk)$" },             float = true})
+hl.window_rule({match = {class = "^(xdg-desktop-portal-gtk)$" },             center = true})
+hl.window_rule({match = {class = "^(xdg-desktop-portal-gtk)$" },             size = {"(monitor_w*0.60)", "(monitor_h*0.65)"} })
 hl.window_rule({match = {class = "^(blueberry\\.py)$" },                     float = true})
 hl.window_rule({match = {class = "^(guifetch)$" },                           float = true}) -- FlafyDev/guifetch
 hl.window_rule({match = {class = "^(pavucontrol)$" },                        float = true})
