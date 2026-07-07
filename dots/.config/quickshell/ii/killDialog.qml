@@ -32,7 +32,10 @@ ApplicationWindow {
     onClosing: {
         Qt.quit()
     }
-    title: Translation.tr("Shell conflicts killer")
+    // Kept untranslated: a Hyprland window rule floats this dialog by matching
+    // this title (rules.lua). Translating it breaks the rule in non-English
+    // locales. The visible dialog content is still translated.
+    title: "Shell conflicts killer"
 
     Component.onCompleted: {
         Config.readWriteDelay = 0;
