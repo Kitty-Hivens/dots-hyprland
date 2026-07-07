@@ -22,54 +22,49 @@ ApplicationWindow {
     property string firstRunFileContent: "This file is just here to confirm you've been greeted :>"
     property real contentPadding: 8
     property bool showNextTime: false
-    property var pages: [
-        {
-            name: Translation.tr("Quick"),
-            icon: "instant_mix",
-            component: "modules/settings/QuickConfig.qml"
-        },
-        {
-            name: Translation.tr("General"),
-            icon: "browse",
-            component: "modules/settings/GeneralConfig.qml"
-        },
-        {
-            name: Translation.tr("Bar"),
-            icon: "toast",
-            iconRotation: 180,
-            component: "modules/settings/BarConfig.qml"
-        },
-        {
-            name: Translation.tr("Background"),
-            icon: "texture",
-            component: "modules/settings/BackgroundConfig.qml"
-        },
-        {
-            name: Translation.tr("Interface"),
-            icon: "bottom_app_bar",
-            component: "modules/settings/InterfaceConfig.qml"
-        },
-        {
-            name: Translation.tr("Services"),
-            icon: "settings",
-            component: "modules/settings/ServicesConfig.qml"
-        },
-        {
-            name: Translation.tr("Advanced"),
-            icon: "construction",
-            component: "modules/settings/AdvancedConfig.qml"
-        },
-        {
-            name: Translation.tr("About"),
-            icon: "info",
-            component: "modules/settings/About.qml"
-        }
+    // Which desktop family's settings to show, tied to the live panelFamily
+    // (reactive): running ii -> Illogical Impulse settings, running Waffle ->
+    // Waffle settings. System settings are a separate destination (see inSystem),
+    // reached from the bottom of the nav rail -- not a family.
+    readonly property string activeFamily: Config.options?.panelFamily ?? "ii"
+    property bool inSystem: false
+
+    readonly property var iiPages: [
+        { name: Translation.tr("Quick"), icon: "instant_mix", component: "modules/settings/QuickConfig.qml" },
+        { name: Translation.tr("General"), icon: "browse", component: "modules/settings/GeneralConfig.qml" },
+        { name: Translation.tr("Bar"), icon: "toast", iconRotation: 180, component: "modules/settings/BarConfig.qml" },
+        { name: Translation.tr("Background"), icon: "texture", component: "modules/settings/BackgroundConfig.qml" },
+        { name: Translation.tr("Interface"), icon: "bottom_app_bar", component: "modules/settings/InterfaceConfig.qml" },
+        { name: Translation.tr("Services"), icon: "settings", component: "modules/settings/ServicesConfig.qml" },
+        { name: Translation.tr("Advanced"), icon: "construction", component: "modules/settings/AdvancedConfig.qml" },
+        { name: Translation.tr("About"), icon: "info", component: "modules/settings/About.qml" }
     ]
+    readonly property var wafflePages: [
+        { name: "Waffle", icon: "grid_view", component: "modules/settings/WaffleConfig.qml" }
+    ]
+    readonly property var systemPages: [
+        { name: Translation.tr("System"), icon: "settings_applications", component: "modules/settings/SystemConfig.qml" }
+    ]
+    readonly property var familyPages: activeFamily === "waffle" ? wafflePages : iiPages
+    readonly property var currentPages: inSystem ? systemPages : familyPages
     property int currentPage: 0
+
+    // Visible header text for the current surface. NOTE: distinct from the
+    // window `title` below (kept "YukiUI Settings" -- a Hyprland window rule
+    // matches it, so it must not be translated/changed).
+    readonly property string familyTitle: activeFamily === "waffle"
+        ? Translation.tr("Waffle Settings")
+        : Translation.tr("Illogical Impulse Settings")
+    readonly property string surfaceTitle: inSystem ? Translation.tr("System Settings") : familyTitle
+
+    // Reset to the first page when the surface changes. While in System, a live
+    // family change must NOT disturb the System view (stay put, keep the page).
+    onInSystemChanged: currentPage = 0
+    onActiveFamilyChanged: if (!inSystem) currentPage = 0
 
     visible: true
     onClosing: Qt.quit()
-    title: "illogical-impulse Settings"
+    title: "YukiUI Settings"
 
     Component.onCompleted: {
         MaterialThemeLoader.reapplyTheme()
@@ -91,19 +86,19 @@ ApplicationWindow {
         Keys.onPressed: (event) => {
             if (event.modifiers === Qt.ControlModifier) {
                 if (event.key === Qt.Key_PageDown) {
-                    root.currentPage = Math.min(root.currentPage + 1, root.pages.length - 1)
+                    root.currentPage = Math.min(root.currentPage + 1, root.currentPages.length - 1)
                     event.accepted = true;
-                } 
+                }
                 else if (event.key === Qt.Key_PageUp) {
                     root.currentPage = Math.max(root.currentPage - 1, 0)
                     event.accepted = true;
                 }
                 else if (event.key === Qt.Key_Tab) {
-                    root.currentPage = (root.currentPage + 1) % root.pages.length;
+                    root.currentPage = (root.currentPage + 1) % root.currentPages.length;
                     event.accepted = true;
                 }
                 else if (event.key === Qt.Key_Backtab) {
-                    root.currentPage = (root.currentPage - 1 + root.pages.length) % root.pages.length;
+                    root.currentPage = (root.currentPage - 1 + root.currentPages.length) % root.currentPages.length;
                     event.accepted = true;
                 }
             }
@@ -123,7 +118,7 @@ ApplicationWindow {
                     leftMargin: 12
                 }
                 color: Appearance.colors.colOnLayer0
-                text: Translation.tr("Settings")
+                text: root.surfaceTitle
                 font {
                     family: Appearance.font.family.title
                     pixelSize: Appearance.font.pixelSize.title
@@ -203,27 +198,44 @@ ApplicationWindow {
                         }
                     }
 
-                    NavigationRailTabArray {
-                        currentIndex: root.currentPage
-                        expanded: navRail.expanded
+                    // Pages of the current surface (family settings, or System).
+                    // Hidden for single-page surfaces (e.g. the System placeholder),
+                    // where the lone page would just duplicate the header/System toggle.
+                    // Returns automatically once a surface has real sub-pages.
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Layout.topMargin: 15
+                        spacing: 0
+                        visible: root.currentPages.length > 1
                         Repeater {
-                            model: root.pages
+                            model: root.currentPages
                             NavigationRailButton {
                                 required property var index
                                 required property var modelData
+                                Layout.fillWidth: true
                                 toggled: root.currentPage === index
-                                onPressed: root.currentPage = index;
+                                onPressed: root.currentPage = index
                                 expanded: navRail.expanded
                                 buttonIcon: modelData.icon
                                 buttonIconRotation: modelData.iconRotation || 0
                                 buttonText: modelData.name
-                                showToggledHighlight: false
                             }
                         }
                     }
 
                     Item {
                         Layout.fillHeight: true
+                    }
+
+                    // Bottom entry: enter/leave System settings (a separate surface)
+                    NavigationRailButton {
+                        Layout.fillWidth: true
+                        Layout.bottomMargin: 8
+                        expanded: navRail.expanded
+                        toggled: root.inSystem
+                        onPressed: root.inSystem = !root.inSystem
+                        buttonIcon: "tune"
+                        buttonText: Translation.tr("System")
                     }
                 }
             }
@@ -240,12 +252,21 @@ ApplicationWindow {
 
                     active: Config.ready
                     Component.onCompleted: {
-                        source = root.pages[0].component
+                        source = root.currentPages[0].component
                     }
 
                     Connections {
                         target: root
                         function onCurrentPageChanged() {
+                            switchAnim.complete();
+                            switchAnim.start();
+                        }
+                        function onInSystemChanged() {
+                            switchAnim.complete();
+                            switchAnim.start();
+                        }
+                        function onActiveFamilyChanged() {
+                            if (root.inSystem) return; // System view is sticky across family changes
                             switchAnim.complete();
                             switchAnim.start();
                         }
@@ -267,7 +288,7 @@ ApplicationWindow {
                             PropertyAction {
                                 target: pageLoader
                                 property: "source"
-                                value: root.pages[root.currentPage].component
+                                value: root.currentPages[root.currentPage].component
                             }
                             PropertyAction {
                                 target: pageLoader
