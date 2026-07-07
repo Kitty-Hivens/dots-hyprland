@@ -41,31 +41,21 @@ hl.window_rule({match = {class = ".*plasmawindowed.*" },                     flo
 hl.window_rule({match = {class = "kcm_.*" },                                  float = true})
 hl.window_rule({match = {class = ".*bluedevilwizard" },                      float = true})
 hl.window_rule({match = {title = ".*Welcome" },                              float = true})
-hl.window_rule({match = {title = "^(illogical-impulse Settings)$" },         float = true})
+hl.window_rule({match = {title = "^(YukiUI Settings)$" },                    float = true})
 hl.window_rule({match = {title = ".*Shell conflicts.*" },                    float = true})
-hl.window_rule({match = {class = "org.freedesktop.impl.portal.desktop.kde" }, float = true})
-hl.window_rule({match = {class = "org.freedesktop.impl.portal.desktop.kde" }, size = {"(monitor_w*0.60)", "(monitor_h*0.65)"} })
 hl.window_rule({match = {class = "^(Zotero)$" },                             float = true})
 hl.window_rule({match = {class = "^(Zotero)$" },                             size = {"(monitor_w*0.45)", "(monitor_h*0.45)"} })
-
--- Move
--- kde-material-you-colors spawns a window when changing dark/light theme. This is to make sure it doesn't interfere at all.
-hl.window_rule({match = {class = "^(plasma-changeicons)$" }, float = true})
-hl.window_rule({match = {class = "^(plasma-changeicons)$" }, no_initial_focus = true})
-hl.window_rule({match = {class = "^(plasma-changeicons)$" }, move = {999999, 999999}})
--- stupid dolphin copy
-hl.window_rule({match = {title = "^(Copying — Dolphin)$" }, move = {40, 80}})
 
 -- Tiling
 hl.window_rule({match = {class = "^dev\\.warp\\.Warp$" }, tile = true})
 
 -- Picture-in-Picture
-hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, float = true})
-hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, keep_aspect_ratio = true})
-hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, move = {"(monitor_w*0.73)", "(monitor_h*0.72)"} })
-hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, size = {"(monitor_w*0.25)", "(monitor_h*0.25)"} })
-hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, float = true})
-hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, pin = true})
+hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture|Картинка в картинке)(.*)$" }, float = true})
+hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture|Картинка в картинке)(.*)$" }, keep_aspect_ratio = true})
+hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture|Картинка в картинке)(.*)$" }, move = {"(monitor_w*0.73)", "(monitor_h*0.72)"} })
+hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture|Картинка в картинке)(.*)$" }, size = {"(monitor_w*0.25)", "(monitor_h*0.25)"} })
+hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture|Картинка в картинке)(.*)$" }, float = true})
+hl.window_rule({match = {title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture|Картинка в картинке)(.*)$" }, pin = true})
 
 -- Screen sharing
 hl.window_rule({match = {title = ".*is sharing (a window|your screen).*" }, float = true})
