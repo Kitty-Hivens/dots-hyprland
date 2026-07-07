@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Io
+import Quickshell.Hyprland
 import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
@@ -123,7 +124,11 @@ ContentPage {
                         text: Translation.tr("Pick wallpaper image on your system")
                     }
                     onClicked: {
-                        Quickshell.execDetached(`${Directories.wallpaperSwitchScriptPath}`);
+                        // switchwall.sh no longer opens a file picker itself (kdialog dropped);
+                        // open the shell's wallpaper selector, same as the Ctrl+Super+T bind.
+                        // This is a lua-hyprland, so dispatch the lua expression (as LauncherSearch does),
+                        // not `hyprctl dispatch global ...` which is parsed as invalid lua here.
+                        Hyprland.dispatch(`hl.dsp.global("quickshell:wallpaperSelectorToggle")`);
                     }
                     mainContentComponent: Component {
                         RowLayout {
