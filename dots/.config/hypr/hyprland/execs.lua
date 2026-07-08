@@ -7,8 +7,9 @@ hl.on("hyprland.start", function ()
     -- Bar, wallpaper
     hl.exec_cmd("$HOME/.config/hypr/hyprland/scripts/start_geoclue_agent.sh")
     -- uwsm app: run qs as its own tracked unit so it lands in user@.service (not 0::/),
-    -- restoring logind/polkit session tracking for its PolkitAgent
-    hl.exec_cmd("uwsm app -- qs -c $qsConfig")
+    -- restoring logind/polkit session tracking for its PolkitAgent. MemoryLow keeps the
+    -- shell resident under memory pressure so it doesn't stall faulting pages back from swap.
+    hl.exec_cmd("uwsm app -a quickshell -p MemoryLow=350M -- qs -c $qsConfig")
     hl.exec_cmd("$HOME/.config/hypr/custom/scripts/__restore_video_wallpaper.sh")
 
     -- Core components (authentication, lock screen, notification daemon)
