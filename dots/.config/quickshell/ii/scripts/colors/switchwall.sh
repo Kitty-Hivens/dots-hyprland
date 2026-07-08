@@ -40,6 +40,13 @@ post_process() {
 
 check_and_prompt_upscale() {
     local img="$1"
+
+    # notify-send below blocks until the user acts; without this guard every
+    # sub-resolution wallpaper switch leaks a stuck prompt process.
+    local lock="${XDG_RUNTIME_DIR:-/tmp}/quickshell-upscale-prompt.lock"
+    exec {lockfd}>"$lock" 2>/dev/null || return 0
+    flock -n "$lockfd" || return 0
+
     min_width_desired="$(hyprctl monitors -j | jq '([.[].width] | max)' | xargs)" # max monitor width
     min_height_desired="$(hyprctl monitors -j | jq '([.[].height] | max)' | xargs)" # max monitor height
 
@@ -53,7 +60,7 @@ check_and_prompt_upscale() {
             img_height=$(identify -format "%h" "$img" 2>/dev/null)
         fi
         if [[ "$img_width" -lt "$min_width_desired" || "$img_height" -lt "$min_height_desired" ]]; then
-            action=$(notify-send "Upscale?" \
+            action=$(timeout 30 notify-send "Upscale?" \
                 "Image resolution (${img_width}x${img_height}) is lower than screen resolution (${min_width_desired}x${min_height_desired})" \
                 -A "open_upscayl=Open Upscayl"\
                 -a "Wallpaper switcher")
@@ -61,7 +68,7 @@ check_and_prompt_upscale() {
                 if command -v upscayl &>/dev/null; then
                     nohup upscayl > /dev/null 2>&1 &
                 else
-                    action2=$(notify-send \
+                    action2=$(timeout 30 notify-send \
                         -a "Wallpaper switcher" \
                         -c "im.error" \
                         -A "install_upscayl=Install Upscayl (Arch)" \
