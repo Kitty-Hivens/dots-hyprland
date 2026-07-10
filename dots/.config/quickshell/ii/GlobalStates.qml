@@ -17,8 +17,11 @@ Singleton {
     property bool osdBrightnessOpen: false
     property bool osdVolumeOpen: false
     property bool oskOpen: false
+    property var oskWindow: null
     property bool overlayOpen: false
     property bool overviewOpen: false
+    property string overviewReturnAddress: ""
+    property bool overviewFocusHandled: false
     property bool regionSelectorOpen: false
     property bool searchOpen: false
     property bool screenLocked: false

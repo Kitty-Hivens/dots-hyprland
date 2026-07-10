@@ -60,9 +60,11 @@ Scope { // Scope
             // Make it usable with other panels
             Component.onCompleted: {
                 GlobalFocusGrab.addPersistent(oskRoot);
+                GlobalStates.oskWindow = oskRoot;
             }
             Component.onDestruction: {
                 GlobalFocusGrab.removePersistent(oskRoot);
+                if (GlobalStates.oskWindow === oskRoot) GlobalStates.oskWindow = null;
             }
 
             // Background

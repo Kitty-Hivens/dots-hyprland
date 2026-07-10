@@ -22,13 +22,14 @@ Scope {
         property bool monitorIsFocused: (Hyprland.focusedMonitor?.id == monitor?.id)
         visible: GlobalStates.overviewOpen
 
+        exclusionMode: ExclusionMode.Ignore
         WlrLayershell.namespace: "quickshell:overview"
-        WlrLayershell.layer: WlrLayer.Top
-        WlrLayershell.keyboardFocus: GlobalStates.overviewOpen ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+        WlrLayershell.layer: WlrLayer.Overlay
+        WlrLayershell.keyboardFocus: GlobalStates.overviewOpen ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         color: "transparent"
 
         mask: Region {
-            item: GlobalStates.overviewOpen ? columnLayout : null
+            item: GlobalStates.overviewOpen ? backdropArea : null
         }
 
         anchors {
@@ -44,20 +45,41 @@ Scope {
                 if (!GlobalStates.overviewOpen) {
                     searchWidget.disableExpandAnimation();
                     overviewScope.dontAutoCancelSearch = false;
-                    GlobalFocusGrab.dismiss();
                 } else {
+                    GlobalStates.overviewFocusHandled = false;
+                    const addr = ToplevelManager.activeToplevel?.HyprlandToplevel?.address;
+                    GlobalStates.overviewReturnAddress = addr ? `0x${addr}` : "";
                     if (!overviewScope.dontAutoCancelSearch) {
                         searchWidget.cancelSearch();
                     }
-                    GlobalFocusGrab.addDismissable(panelWindow);
                 }
+                delayedGrabTimer.restart();
             }
         }
 
-        Connections {
-            target: GlobalFocusGrab
-            function onDismissed() {
-                GlobalStates.overviewOpen = false;
+        // Scope the grab to this window (plus the OSK when open), never the bar. A shared grab
+        // that included the bar left fullscreen games unfocused on dismiss, and with
+        // no_focus_fallback their pointer lock never re-armed.
+        HyprlandFocusGrab {
+            id: grab
+            windows: (GlobalStates.oskOpen && GlobalStates.oskWindow) ? [panelWindow, GlobalStates.oskWindow] : [panelWindow]
+            active: false
+            onCleared: () => {
+                if (!active) GlobalStates.overviewOpen = false;
+            }
+        }
+
+        Timer {
+            id: delayedGrabTimer
+            interval: Appearance.animation.elementMoveFast.duration
+            onTriggered: {
+                grab.active = GlobalStates.overviewOpen;
+                // no_focus_fallback keeps the game unfocused after dismiss, so its pointer lock
+                // never re-arms. Refocus the toplevel we took over from -- unless the overview
+                // itself directed focus to a window or workspace.
+                if (!GlobalStates.overviewOpen && !GlobalStates.overviewFocusHandled && GlobalStates.overviewReturnAddress) {
+                    Hyprland.dispatch(`hl.dsp.focus({ window = "address:${GlobalStates.overviewReturnAddress}" })`);
+                }
             }
         }
         implicitWidth: columnLayout.implicitWidth
@@ -66,6 +88,13 @@ Scope {
         function setSearchingText(text) {
             searchWidget.setSearchingText(text);
             searchWidget.focusFirstItem();
+        }
+
+        MouseArea {
+            id: backdropArea
+            anchors.fill: parent
+            // Click on empty space (not the search bar or a workspace/window) dismisses the overview.
+            onClicked: GlobalStates.overviewOpen = false
         }
 
         Column {
