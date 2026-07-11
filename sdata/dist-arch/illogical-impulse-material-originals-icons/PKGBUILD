@@ -1,0 +1,18 @@
+groups=(illogical-impulse)
+pkgname=illogical-impulse-material-originals-icons
+pkgver=1.0
+pkgrel=1
+pkgdesc="Material Originals icon theme, installed for illogical-impulse dotfiles"
+arch=('any')
+url="https://github.com/Macintosh98/Material-Originals-Icons"
+license=('GPL-3.0-or-later')
+makedepends=('git')
+options=('!strip')
+_theme=Material-Originals
+source=("$pkgname::git+$url.git")
+sha256sums=('SKIP')
+
+package() {
+  install -dm755 "$pkgdir/usr/share/icons"
+  cp -dr --no-preserve=mode "$srcdir/$pkgname/$_theme" "$pkgdir/usr/share/icons"
+}
