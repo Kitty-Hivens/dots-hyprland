@@ -184,7 +184,9 @@ function install_google_sans_flex(){
   x git pull origin main 
   x git submodule update --init --recursive
   warning_overwrite
-  rsync_dir "$src_dir" "$target_dir" 
+  rsync_dir "$src_dir" "$target_dir"
+  # The whole upstream repo is pulled, so its .git rides along -- useless in a fonts dir and fontconfig walks it every scan.
+  x rm -rf "$target_dir/.git"
   x fc-cache -fv
   x cd $REPO_ROOT
   x mkdir -p "$(dirname ${INSTALLED_LISTFILE})"
