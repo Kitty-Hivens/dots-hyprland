@@ -86,7 +86,9 @@ Scope { // Scope
         
         sourceComponent: PanelWindow { // Window
             id: panelWindow
-            visible: GlobalStates.sidebarLeftOpen
+            // Don't map over a game: on Top it'd sit under the fullscreen anyway, and it would
+            // grab focus and freeze the game's pointer lock. GameMode.engaged catches borderless too.
+            visible: GlobalStates.sidebarLeftOpen && !GameMode.engaged
             
             property bool extend: false
             property real sidebarWidth: panelWindow.extend ? Appearance.sizes.sidebarWidthExtended : Appearance.sizes.sidebarWidth

@@ -13,7 +13,9 @@ Scope {
 
     PanelWindow {
         id: panelWindow
-        visible: GlobalStates.sidebarRightOpen
+        // Don't map over a game (see SidebarLeft): it'd sit under the fullscreen and freeze
+        // the game's pointer lock. GameMode.engaged catches borderless too.
+        visible: GlobalStates.sidebarRightOpen && !GameMode.engaged
 
         function hide() {
             GlobalStates.sidebarRightOpen = false;
