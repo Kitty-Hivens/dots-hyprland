@@ -134,6 +134,9 @@ hl.layer_rule({ match = { namespace = "quickshell:dock" }, animation = "slide bo
 hl.layer_rule({ match = { namespace = "quickshell:screenCorners" }, animation = "popin 120%"})
 hl.layer_rule({ match = { namespace = "quickshell:lockWindowPusher" }, no_anim = true})
 hl.layer_rule({ match = { namespace = "quickshell:notificationPopup" }, animation = "fade"})
+-- The popup card is opaque, so blur behind it is invisible yet still costs a per-frame multi-pass GPU hit that tanks FPS over fullscreen apps.
+hl.layer_rule({ match = { namespace = "quickshell:notificationPopup" }, blur = false})
+hl.layer_rule({ match = { namespace = "quickshell:notificationPopup" }, blur_popups = false})
 hl.layer_rule({ match = { namespace = "quickshell:overlay" }, no_anim = true})
 hl.layer_rule({ match = { namespace = "quickshell:overlay" }, ignore_alpha = 1})
 hl.layer_rule({ match = { namespace = "quickshell:overview" }, no_anim = true})
