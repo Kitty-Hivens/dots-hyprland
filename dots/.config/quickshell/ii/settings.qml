@@ -23,11 +23,8 @@ ApplicationWindow {
     property real contentPadding: 8
     property bool showNextTime: false
     // Which desktop family's settings to show, tied to the live panelFamily
-    // (reactive): running ii -> Illogical Impulse settings, running Waffle ->
-    // Waffle settings. System settings are a separate destination (see inSystem),
-    // reached from the bottom of the nav rail -- not a family.
+    // (reactive): running ii -> Illogical Impulse settings, running Waffle -> Waffle settings.
     readonly property string activeFamily: Config.options?.panelFamily ?? "ii"
-    property bool inSystem: false
 
     readonly property var iiPages: [
         { name: Translation.tr("Quick"), icon: "instant_mix", component: "modules/settings/QuickConfig.qml" },
@@ -42,28 +39,16 @@ ApplicationWindow {
     readonly property var wafflePages: [
         { name: "Waffle", icon: "grid_view", component: "modules/settings/WaffleConfig.qml" }
     ]
-    readonly property var systemPages: [
-        { name: Translation.tr("System"), icon: "settings_applications", component: "modules/settings/SystemConfig.qml" }
-    ]
-    readonly property var familyPages: activeFamily === "waffle" ? wafflePages : iiPages
-    readonly property var currentPages: inSystem ? systemPages : familyPages
+    readonly property var currentPages: activeFamily === "waffle" ? wafflePages : iiPages
     property int currentPage: 0
 
-    // Visible header text for the current surface. NOTE: distinct from the
-    // window `title` below (kept "YukiUI Settings" -- a Hyprland window rule
-    // matches it, so it must not be translated/changed).
-    readonly property string familyTitle: activeFamily === "waffle"
-        ? Translation.tr("Waffle Settings")
-        : Translation.tr("Illogical Impulse Settings")
-    readonly property string surfaceTitle: inSystem ? Translation.tr("System Settings") : familyTitle
-
-    // Reset to the first page when the surface changes. While in System, a live
-    // family change must NOT disturb the System view (stay put, keep the page).
-    onInSystemChanged: currentPage = 0
-    onActiveFamilyChanged: if (!inSystem) currentPage = 0
+    // Reset to the first page when the family changes.
+    onActiveFamilyChanged: currentPage = 0
 
     visible: true
     onClosing: Qt.quit()
+    // Hyprland floats this window by matching the exact title (rules.lua) -- keep it
+    // hardcoded, never bind to a translated string.
     title: "YukiUI Settings"
 
     Component.onCompleted: {
@@ -108,21 +93,31 @@ ApplicationWindow {
             visible: Config.options?.windows.showTitlebar
             Layout.fillWidth: true
             Layout.fillHeight: false
-            implicitHeight: Math.max(titleText.implicitHeight, windowControlsRow.implicitHeight)
-            StyledText {
-                id: titleText
+            implicitHeight: Math.max(titleRow.implicitHeight, windowControlsRow.implicitHeight)
+            RowLayout {
+                id: titleRow
                 anchors {
                     left: Config.options.windows.centerTitle ? undefined : parent.left
                     horizontalCenter: Config.options.windows.centerTitle ? parent.horizontalCenter : undefined
                     verticalCenter: parent.verticalCenter
                     leftMargin: 12
                 }
-                color: Appearance.colors.colOnLayer0
-                text: root.surfaceTitle
-                font {
-                    family: Appearance.font.family.title
-                    pixelSize: Appearance.font.pixelSize.title
-                    variableAxes: Appearance.font.variableAxes.title
+                spacing: 8
+                MaterialSymbol {
+                    text: "format_paint"
+                    iconSize: Appearance.font.pixelSize.title
+                    color: Appearance.colors.colOnLayer0
+                    Layout.alignment: Qt.AlignVCenter
+                }
+                StyledText {
+                    id: titleText
+                    color: Appearance.colors.colOnLayer0
+                    text: Translation.tr("Settings")
+                    font {
+                        family: Appearance.font.family.title
+                        pixelSize: Appearance.font.pixelSize.title
+                        variableAxes: Appearance.font.variableAxes.title
+                    }
                 }
             }
             RowLayout { // Window controls row
@@ -223,20 +218,6 @@ ApplicationWindow {
                         }
                     }
 
-                    Item {
-                        Layout.fillHeight: true
-                    }
-
-                    // Bottom entry: enter/leave System settings (a separate surface)
-                    NavigationRailButton {
-                        Layout.fillWidth: true
-                        Layout.bottomMargin: 8
-                        expanded: navRail.expanded
-                        toggled: root.inSystem
-                        onPressed: root.inSystem = !root.inSystem
-                        buttonIcon: "tune"
-                        buttonText: Translation.tr("System")
-                    }
                 }
             }
             Rectangle { // Content container
@@ -261,12 +242,7 @@ ApplicationWindow {
                             switchAnim.complete();
                             switchAnim.start();
                         }
-                        function onInSystemChanged() {
-                            switchAnim.complete();
-                            switchAnim.start();
-                        }
                         function onActiveFamilyChanged() {
-                            if (root.inSystem) return; // System view is sticky across family changes
                             switchAnim.complete();
                             switchAnim.start();
                         }
