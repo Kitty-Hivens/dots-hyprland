@@ -67,11 +67,6 @@ hl.window_rule({match = {title = ".*is sharing (a window|your screen).*" }, floa
 hl.window_rule({match = {title = ".*is sharing (a window|your screen).*" }, pin = true})
 hl.window_rule({match = {title = ".*is sharing (a window|your screen).*" }, move = {"(monitor_w*.5-window_w*.5)", "(monitor_h-window_h-12)"} })
 
--- --- Tearing ---
-hl.window_rule({match = {class = ".*\\.exe" }, immediate = true})
-hl.window_rule({match = {title = ".*minecraft.*" }, immediate = true})
-hl.window_rule({match = {class = "^(steam_app).*" }, immediate = true})
-
 -- No shadow for tiled windows
 hl.window_rule({match = {float = 0 }, no_shadow = true})
 

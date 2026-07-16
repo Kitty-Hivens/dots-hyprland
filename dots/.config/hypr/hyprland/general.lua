@@ -60,7 +60,7 @@ hl.config({
         resize_on_border = true,
 
         no_focus_fallback = true,
-        allow_tearing = true, -- This just allows the `immediate` window rule to work
+        allow_tearing = false, -- Pure VRR: no tearing, VRR handles latency and smoothness
         snap = {
             enabled = true,
             window_gap = 4,
