@@ -31,6 +31,10 @@ Scope {
                 id: barRoot
                 screen: barLoader.modelData
 
+                // Unmap under a fullscreen window on this monitor so Hyprland can direct-scanout it (proper VRR)
+                property bool fullscreenOnThisMonitor: Hyprland.workspaces.values.some(ws => ws.active && ws.monitor?.name == barLoader.modelData.name && ws.toplevels.values.some(w => w.wayland?.fullscreen))
+                visible: !(Config?.options.bar.hideWhenFullscreen && fullscreenOnThisMonitor)
+
                 Timer {
                     id: showBarTimer
                     interval: (Config?.options.bar.autoHide.showWhenPressingSuper.delay ?? 100)
