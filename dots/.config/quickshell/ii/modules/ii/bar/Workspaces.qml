@@ -22,6 +22,7 @@ ButtonMouseArea {
 
     property bool vertical: Config.options.bar.vertical
     property bool superPressAndHeld: false // Relevant modifications at bottom of file
+    property int widgetPadding: 4 // Consumed by the enclosing BarGroup in BarContent.qml
 
     property real workspaceButtonWidth: 26
     property real activeWorkspaceMargin: 2
@@ -39,11 +40,6 @@ ButtonMouseArea {
     readonly property real barThickness: vertical ? Appearance.sizes.verticalBarWidth : Appearance.sizes.barHeight
     implicitWidth: vertical ? barThickness : occupiedIndicators.implicitWidth
     implicitHeight: vertical ? occupiedIndicators.implicitHeight : barThickness
-
-    property real specialBlur: (wsModel.specialWorkspaceActive && !containsMouse) ? 1 : 0
-    Behavior on specialBlur {
-        animation: Appearance.animation.elementMoveSmall.numberAnimation.createObject(this)
-    }
 
     // Interactions
     acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -73,16 +69,6 @@ ButtonMouseArea {
     Item {
         id: regularWorkspaces
         anchors.fill: parent
-
-        scale: 1 - 0.08 * root.specialBlur
-        layer.smooth: true
-        layer.enabled: root.specialBlur > 0
-        layer.effect: MultiEffect {
-            brightness: -0.1 * root.specialBlur
-            blurEnabled: true
-            blur: root.specialBlur
-            blurMax: 32
-        }
 
         /////////////////// Occupied indicators ///////////////////
         StyledRectangle {
@@ -179,25 +165,11 @@ ButtonMouseArea {
         WorkspaceLayout {
             id: numbersGrid
             z: 4
-            layer.enabled: true // For the masking
 
             Repeater {
                 model: wsModel.shownCount
                 delegate: NumberWorkspaceItem {}
             }
-        }
-        Colorizer {
-            z: 5
-            anchors.fill: numbersGrid
-            colorizationColor: Appearance.colors.colOnPrimary
-            sourceColor: Appearance.colors.colOnSecondaryContainer
-
-            source: activeIndicator
-            maskEnabled: true
-            maskSource: numbersGrid
-
-            maskThresholdMin: 0.5
-            maskSpreadAtMin: 1
         }
 
         /////////////////// App icons ///////////////////
@@ -211,6 +183,9 @@ ButtonMouseArea {
                     id: wsApp
                     property var biggestWindow: wsModel.biggestWindow[index]
                     property var mainAppIconSource: Quickshell.iconPath(AppSearch.guessIcon(biggestWindow?.class), "image-missing")
+                    readonly property bool monochrome: Config.options.bar.workspaces.monochromeIcons
+                    readonly property real iconOpacity: !Config.options?.bar.workspaces.showAppIcons ? 0 : (wsApp.biggestWindow && !root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons) ? 1 : wsApp.biggestWindow ? root.workspaceIconOpacityShrinked : 0
+                    readonly property real iconScale: ((!root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons) ? root.workspaceIconSize : root.workspaceIconSizeShrinked) / root.workspaceIconSize
 
                     AppIcon {
                         id: appIcon
@@ -223,13 +198,21 @@ ButtonMouseArea {
                         }
 
                         animated: !wsApp.biggestWindow // Prevent the "image-missing" icon
-                        visible: false // Prevent dupe: the colorizer already copies the icon
 
                         source: wsApp.mainAppIconSource
                         implicitSize: NumberUtils.roundToEven(root.workspaceIconSize)
+                        roundToIconSize: true // Render at a standard size and downscale smoothly (softer, like the old IconImage)
+
+                        // Draw the icon directly (no MultiEffect/mask) so edges stay soft; the mono path below handles tinting
+                        visible: opacity > 0 && !wsApp.monochrome
+                        opacity: wsApp.iconOpacity
+                        scale: wsApp.iconScale
 
                         Behavior on opacity {
                             animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
+                        }
+                        Behavior on scale {
+                            animation: Appearance.animation.elementMoveSmall.numberAnimation.createObject(this)
                         }
                         Behavior on cornerMargin {
                             animation: Appearance.animation.elementMoveSmall.numberAnimation.createObject(this)
@@ -243,20 +226,21 @@ ButtonMouseArea {
                         diameter: appIcon.implicitSize
                     }
 
-                    Loader { // Somehow putting this multieffect in a loader prevents it from not showing up
+                    Loader { // Monochrome tint path: only when the option is enabled (recolors + circle-masks the icon)
                         id: colorizer
+                        active: wsApp.monochrome
                         anchors.fill: appIcon
                         sourceComponent: Colorizer {
                             implicitWidth: appIcon.implicitWidth
                             implicitHeight: appIcon.implicitHeight
                             colorizationColor: Appearance.m3colors.darkmode ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnPrimary
-                            colorization: Config.options.bar.workspaces.monochromeIcons ? 0.8 : 0.5
+                            colorization: 0.8
                             brightness: 0
                             source: appIcon
 
-                            opacity: !Config.options?.bar.workspaces.showAppIcons ? 0 : (wsApp.biggestWindow && !root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons) ? 1 : wsApp.biggestWindow ? root.workspaceIconOpacityShrinked : 0
+                            opacity: wsApp.iconOpacity
                             visible: opacity > 0
-                            scale: ((!root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons) ? root.workspaceIconSize : root.workspaceIconSizeShrinked) / root.workspaceIconSize
+                            scale: wsApp.iconScale
 
                             Behavior on opacity {
                                 animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
@@ -279,10 +263,6 @@ ButtonMouseArea {
     FadeLoader {
         anchors.centerIn: parent
         shown: wsModel.specialWorkspaceActive
-        scale: 0.8 + 0.2 * root.specialBlur
-
-        opacity: root.specialBlur
-        Behavior on opacity {} // Don't animate, as specialBlur is already animated
 
         sourceComponent: Pill {
             anchors.centerIn: parent
@@ -362,7 +342,7 @@ ButtonMouseArea {
         id: wsNum
         property bool hasBiggestWindow: !!wsModel.biggestWindow[index]
         property int wsId: wsModel.getWorkspaceIdAt(index)
-        property color contentColor: (wsModel.occupied[wsNum.index] && wsId !== wsModel.fakeWorkspace) ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer1Inactive
+        property color contentColor: (wsNum.wsId === wsModel.activeWorkspace) ? Appearance.colors.colOnPrimary : (wsModel.occupied[wsNum.index] && wsNum.wsId !== wsModel.fakeWorkspace) ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer1Inactive
         property bool showingNumbers: {
             if (root.superPressAndHeld)
                 return true;
