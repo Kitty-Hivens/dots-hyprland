@@ -10,6 +10,7 @@ import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
+import Quickshell.Widgets
 
 ButtonMouseArea {
     id: root
@@ -187,7 +188,7 @@ ButtonMouseArea {
                     readonly property real iconOpacity: !Config.options?.bar.workspaces.showAppIcons ? 0 : (wsApp.biggestWindow && !root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons) ? 1 : wsApp.biggestWindow ? root.workspaceIconOpacityShrinked : 0
                     readonly property real iconScale: ((!root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons) ? root.workspaceIconSize : root.workspaceIconSizeShrinked) / root.workspaceIconSize
 
-                    AppIcon {
+                    IconImage { // Render app icons like the pre-refactor widget did
                         id: appIcon
                         property real cornerMargin: (!root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons && wsApp.biggestWindow) ? (root.workspaceButtonWidth - root.workspaceIconSize) / 2 : root.workspaceIconMarginShrinked
                         anchors {
@@ -197,11 +198,8 @@ ButtonMouseArea {
                             rightMargin: (parent.implicitWidth - root.workspaceButtonWidth) / 2 + cornerMargin
                         }
 
-                        animated: !wsApp.biggestWindow // Prevent the "image-missing" icon
-
                         source: wsApp.mainAppIconSource
                         implicitSize: NumberUtils.roundToEven(root.workspaceIconSize)
-                        roundToIconSize: true // Render at a standard size and downscale smoothly (softer, like the old IconImage)
 
                         // Draw the icon directly (no MultiEffect/mask) so edges stay soft; the mono path below handles tinting
                         visible: opacity > 0 && !wsApp.monochrome
@@ -354,7 +352,8 @@ ButtonMouseArea {
         }
 
         FadeLoader {
-            shown: !wsNum.showingNumbers
+            // Hide the dot when an app icon is shown, otherwise it bleeds through transparent icons
+            shown: !wsNum.showingNumbers && !(Config.options?.bar.workspaces.showAppIcons && wsNum.hasBiggestWindow)
             anchors.centerIn: parent
             Circle {
                 anchors.centerIn: parent
