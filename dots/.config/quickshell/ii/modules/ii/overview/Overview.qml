@@ -94,6 +94,7 @@ Scope {
             id: backdropArea
             anchors.fill: parent
             // Click on empty space (not the search bar or a workspace/window) dismisses the overview.
+            acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
             onClicked: GlobalStates.overviewOpen = false
         }
 
