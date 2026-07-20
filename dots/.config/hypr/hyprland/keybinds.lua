@@ -291,10 +291,14 @@ for i = 1, 4 do
     local keycombos = { key[1], key[2], "CTRL + " .. key[1], "CTRL + " .. key[2] }
     local prefix = { "+", "-", "r+", "r-" }
     hl.bind(keycombos[i], hl.dsp.focus({ workspace = prefix[i] .. "1" }))
+    -- A scroll while holding Super does not disarm the tap-to-open overview, so releasing
+    -- Super after scrolling pops it open. Interrupt it like a normal key press would.
+    hl.bind(keycombos[i], hl.dsp.global("quickshell:searchToggleReleaseInterrupt"))
 end
 --## Special
 hl.bind("SUPER + S", hl.dsp.workspace.toggle_special("special"), { description = "Workspace: Toggle scratchpad" })
 hl.bind("SUPER + mouse:275", hl.dsp.workspace.toggle_special("special"))
+hl.bind("SUPER + mouse:275", hl.dsp.global("quickshell:searchToggleReleaseInterrupt"))
 for i = 1, 4 do
     local key = { "BracketLeft", "BracketRight", "Up", "Down" }
     local prefix = { "-1", "+1", "r-5", "r+5" }
