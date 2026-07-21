@@ -183,7 +183,7 @@ ButtonMouseArea {
                 delegate: WorkspaceItem {
                     id: wsApp
                     property var biggestWindow: wsModel.biggestWindow[index]
-                    property var mainAppIconSource: Quickshell.iconPath(AppSearch.guessIcon(biggestWindow?.class), "image-missing")
+                    property var mainAppIconSource: AppSearch.iconFor(biggestWindow?.class)
                     readonly property bool monochrome: Config.options.bar.workspaces.monochromeIcons
                     readonly property real iconOpacity: !Config.options?.bar.workspaces.showAppIcons ? 0 : (wsApp.biggestWindow && !root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons) ? 1 : wsApp.biggestWindow ? root.workspaceIconOpacityShrinked : 0
                     readonly property real iconScale: ((!root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons) ? root.workspaceIconSize : root.workspaceIconSizeShrinked) / root.workspaceIconSize

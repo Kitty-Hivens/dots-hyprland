@@ -95,6 +95,18 @@ Singleton {
         return str.toLowerCase().replace(/_/g, "-");
     }
 
+    // Central icon-source helpers used by the widgets. NOTE: the intermittent "icon dropped
+    // after hot-reload" is a Quickshell/Qt issue, not something these can fix -- the image://icon/
+    // provider calls QIcon::fromTheme(), whose QIconLoader caches a null for names queried during
+    // the brief post-reload window before the theme is warm, and keeps it until a full restart.
+    function iconPathCached(name) {
+        return Quickshell.iconPath(name, "image-missing");
+    }
+
+    function iconFor(appClass) {
+        return root.iconPathCached(root.guessIcon(appClass));
+    }
+
     function guessIcon(str) {
         if (!str || str.length == 0) return "image-missing";
 

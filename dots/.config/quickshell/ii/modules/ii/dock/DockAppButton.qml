@@ -92,7 +92,7 @@ DockButton {
                 }
                 active: !root.isSeparator
                 sourceComponent: IconImage {
-                    source: Quickshell.iconPath(AppSearch.guessIcon(appToplevel.appId), "image-missing")
+                    source: AppSearch.iconFor(appToplevel.appId)
                     implicitSize: root.iconSize
                 }
             }
