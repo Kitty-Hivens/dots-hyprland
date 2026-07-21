@@ -19,6 +19,10 @@ Item {
     case RegionSelection.SnipAction.Record:
     case RegionSelection.SnipAction.RecordWithSound:
         return Translation.tr("Record region");
+    case RegionSelection.SnipAction.ScreenShare:
+        return Translation.tr("Share region");
+    default:
+        return "";
     }
     property string materialSymbol: switch (root.action) {
     case RegionSelection.SnipAction.Copy:
@@ -31,6 +35,8 @@ Item {
     case RegionSelection.SnipAction.Record:
     case RegionSelection.SnipAction.RecordWithSound:
         return "videocam";
+    case RegionSelection.SnipAction.ScreenShare:
+        return "screen_share";
     default:
         return "";
     }

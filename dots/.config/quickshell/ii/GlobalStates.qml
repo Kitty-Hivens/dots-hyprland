@@ -23,6 +23,8 @@ Singleton {
     property string overviewReturnAddress: ""
     property bool overviewFocusHandled: false
     property bool regionSelectorOpen: false
+    property bool screenSharePickerOpen: false
+    property bool screenShareRegionOpen: false
     property bool searchOpen: false
     property bool screenLocked: false
     property bool screenLockContainsCharacters: false
