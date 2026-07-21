@@ -1,5 +1,6 @@
 import qs.modules.common
 import qs.modules.common.functions
+import qs.services
 import Qt5Compat.GraphicalEffects
 import QtQuick
 import Quickshell
@@ -13,6 +14,11 @@ MaterialShape { // App icon
     property var urgency: NotificationUrgency.Normal
     property bool isUrgent: urgency === NotificationUrgency.Critical
     property var image: ""
+    // The notification's own image is served through the qsimage provider, whose id can go
+    // stale while we still reference it -> the load errors and the icon would blank forever.
+    // Track that failure so the appIcon / material-symbol fallbacks take over instead.
+    property bool imageFailed: false
+    onImageChanged: root.imageFailed = false
     property real materialIconScale: 0.57
     property real appIconScale: 0.8
     property real smallAppIconScale: 0.49
@@ -30,7 +36,7 @@ MaterialShape { // App icon
     color: isUrgent ? Appearance.colors.colPrimaryContainer : Appearance.colors.colSecondaryContainer
     Loader {
         id: materialSymbolLoader
-        active: root.appIcon == "" && root.image == ""
+        active: root.appIcon == "" && (root.image == "" || root.imageFailed)
         anchors.fill: parent
         sourceComponent: MaterialSymbol {
             text: {
@@ -48,18 +54,18 @@ MaterialShape { // App icon
     }
     Loader {
         id: appIconLoader
-        active: root.image == "" && root.appIcon != ""
+        active: (root.image == "" || root.imageFailed) && root.appIcon != ""
         anchors.centerIn: parent
         sourceComponent: IconImage {
             id: appIconImage
             implicitSize: root.appIconSize
             asynchronous: true
-            source: Quickshell.iconPath(root.appIcon, "image-missing")
+            source: AppSearch.iconPathCached(root.appIcon)
         }
     }
     Loader {
         id: notifImageLoader
-        active: root.image != ""
+        active: root.image != "" && !root.imageFailed
         anchors.fill: parent
         sourceComponent: Item {
             anchors.fill: parent
@@ -83,6 +89,15 @@ MaterialShape { // App icon
                     }
                 }
             }
+            // Re-poking source would break the declarative binding (and stale a reused
+            // delegate), so on failure just fall back to the app icon / material symbol.
+            Connections {
+                target: notifImage
+                function onStatusChanged() {
+                    if (notifImage.status === Image.Error)
+                        root.imageFailed = true;
+                }
+            }
             Loader {
                 id: notifImageAppIconLoader
                 active: root.appIcon != ""
@@ -91,7 +106,7 @@ MaterialShape { // App icon
                 sourceComponent: IconImage {
                     implicitSize: root.smallAppIconSize
                     asynchronous: true
-                    source: Quickshell.iconPath(root.appIcon, "image-missing")
+                    source: AppSearch.iconPathCached(root.appIcon)
                 }
             }
         }
