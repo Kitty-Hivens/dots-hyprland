@@ -23,6 +23,7 @@ Item {
     property int sidebarWidth: Appearance.sizes.sidebarWidth
     property int sidebarPadding: 10
     property string settingsQmlPath: Quickshell.shellPath("settings.qml")
+    property string systemSettingsQmlPath: Quickshell.shellPath("systemSettings.qml")
     property bool showAudioOutputDialog: false
     property bool showAudioInputDialog: false
     property bool showBluetoothDialog: false
@@ -283,6 +284,17 @@ Item {
                 }
                 StyledToolTip {
                     text: Translation.tr("Reload Hyprland & Quickshell")
+                }
+            }
+            QuickToggleButton {
+                toggled: false
+                buttonIcon: "tune"
+                onClicked: {
+                    GlobalStates.sidebarRightOpen = false;
+                    Quickshell.execDetached(["qs", "-p", root.systemSettingsQmlPath]);
+                }
+                StyledToolTip {
+                    text: Translation.tr("System")
                 }
             }
             QuickToggleButton {

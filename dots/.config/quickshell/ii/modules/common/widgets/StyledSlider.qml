@@ -64,9 +64,17 @@ Slider {
     from: 0
     to: 1
 
+    // Opt in to a timed animation instead of the velocity driven one. Velocity is
+    // in units of the property per second, so on a slider whose whole range is a
+    // couple of units the default finishes inside a millisecond: fine for volume
+    // tracking a keypress, invisible when a value is being put back.
+    property int valueAnimationDuration: 0
+
     Behavior on value { // This makes the adjusted value (like volume) shift smoothly
+        enabled: root.valueAnimationDuration <= 0 || !root.pressed
         SmoothedAnimation {
-            velocity: Appearance.animation.elementMoveFast.velocity
+            velocity: root.valueAnimationDuration > 0 ? -1 : Appearance.animation.elementMoveFast.velocity
+            duration: root.valueAnimationDuration
         }
     }
 
