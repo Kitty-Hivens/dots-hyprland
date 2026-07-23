@@ -8,7 +8,9 @@ NestableObject {
     id: root
 
     required property HyprlandMonitor monitor
-    readonly property var liveMonitorData: HyprlandData.monitors.find(m => m.id === monitor.id)
+    // Guarded: the monitor is torn down before its model is, and an unguarded
+    // read here throws during that window, taking the bar's bindings with it.
+    readonly property var liveMonitorData: HyprlandData.monitors.find(m => m.id === root.monitor?.id)
     readonly property Toplevel activeWindow: ToplevelManager.activeToplevel
     readonly property int activeWorkspace: monitor?.activeWorkspace?.id ?? 1
     readonly property bool currentWorkspaceNotFake: activeWindow?.activated ?? false // Active empty workspace = fake. At least, that's how I like to call it.
